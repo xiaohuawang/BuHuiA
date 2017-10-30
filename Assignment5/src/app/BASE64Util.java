@@ -52,8 +52,9 @@ public class BASE64Util {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String source = "12dfefDKLJKLKL464d中文f465as43f1a3 f46e353D1F34&*^$E65F46EF43456abcd54as56f00ef";
-
+		// String source = "12dfefDKLJKLKL464d中文f465as43f1a3
+		// f46e353D1F34&*^$E65F46EF43456abcd54as56f00ef";
+		String source = "12005";
 		String encodedStr = BASE64Util.encode(source);
 		System.out.println("BASE64加密结果：");
 		System.out.println(encodedStr);
