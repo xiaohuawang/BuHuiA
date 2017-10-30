@@ -1,8 +1,9 @@
 package app;
 
-import generator.MessageGenerator;
-import object.Bank;
-import object.Client;
+import java.util.ArrayList;
+
+import object.Transcation;
+import writeFile.WriteResult;
 
 //Simulator takes several input arguments:  
 //– Number of unique bank clients       0-50000
@@ -16,19 +17,17 @@ import object.Client;
 //as explained below. For each of the unique (message, digital signature) pair, 
 //it then simulates the verification process, and writes the simulation results into the provided output
 
+//40 20 0.2 TransactionResult.csv
 public class App {
 
 	public static void main(String[] args) throws Exception {
 		
-		Bank bank =new Bank();
-		System.out.println(bank.getPublicKey());
+		Transcation transaction=new Transcation();
+		WriteResult wResult=new WriteResult();
 		
-		//client id 1
-		Client client =new Client(1,true);
-		System.out.println(client.getPrivateKey());
-		MessageGenerator mg=new MessageGenerator();
-//		client.setMessage(mg);
-//		System.out.println(client.getMessage());
+		ArrayList<String> resultList=transaction.transactionStart(args[0],args[1],args[2]);
+		wResult.writeResult(resultList,args[3]);
+		
 	}
 
 }

@@ -1,11 +1,9 @@
 package object;
 
-import java.util.List;
+import java.util.Date;
 import java.util.Map;
-import java.util.Random;
 
-import app.TestRSA;
-import generator.MessageGenerator;
+import rsa.RSAEncryption;
 
 //– Transaction number – Date,
 //– Time,
@@ -20,47 +18,67 @@ public class Client {
 	private int clientId;
 	private int depositLimt;
 	private int withdrawalLimit;
+	private Date transactionTime;
 	private boolean hasMessage;
 	private Message message;
+	private String privateKey;
+	private String seed;
 	// private MessageGenerator mg;
 
-	public Client(int clientId, boolean hasMessage) {
+	public Client(int clientId, boolean hasMessage, Date transactionTime, int depositLimt, int withdrawalLimit) {
 		this.clientId = clientId;
-		this.hasMessage=hasMessage;
+		this.hasMessage = hasMessage;
+		this.transactionTime = transactionTime;
+		this.depositLimt=depositLimt;
+		this.withdrawalLimit=withdrawalLimit;
 	}
 
-	private String privateKey;
-
-	// public int getMessage() {
-	//// System.out.println("client's message= "+message);
-	// return message;
-	// }
-
-	// public void setMessage(MessageGenerator mg) {
-	// List<Integer> messageList=mg.generateRandomMessage();
-	// Random random = new Random();
-	// int index = random.nextInt(messageList.size());
-	// message=messageList.get(index);
-	//// System.out.println(messageList.get(index));
-	// }
-
-	public void setMessage(Message message){
-		this.message=message;
+	public Date getTransactionTime() {
+		return transactionTime;
 	}
-	
-	public Message getMessage(){
+
+	public void setTransactionTime(Date transactionTime) {
+		this.transactionTime = transactionTime;
+	}
+
+	public void setMessage(Message message) {
+		this.message = message;
+	}
+
+	public Message getMessage() {
 		return message;
 	}
-	
+
 	public int getClientId() {
 		return clientId;
 	}
 
-	public String getPrivateKey() throws Exception {
-		String seed = "abc123";// 种子
-		Map<String, Object> keyMap = TestRSA.initKey(seed);// 初始化密钥
-		privateKey = TestRSA.getPrivateKey(keyMap);
+	public void setSeed(String seed) {
+		this.seed = seed;
+	}
+
+	public String getSeed() {
+		return seed;
+	}
+
+	public int getDepositLimt() {
+		return depositLimt;
+	}
+
+	public int getWithdrawalLimit() {
+		return withdrawalLimit;
+	}
+
+	public String getPrivateKey(String seed) throws Exception {
+		// seed = "abc123";
+		Map<String, Object> keyMap = RSAEncryption.initKey(seed);// 初始化密钥
+		privateKey = RSAEncryption.getPublicKey(keyMap);
 
 		return privateKey;
+	}
+
+	public String getencodedStr() throws Exception {
+		return RSAEncryption.encryptByPublicKey(String.valueOf(getMessage().getMessageDetail()),
+				this.getPrivateKey(seed));
 	}
 }

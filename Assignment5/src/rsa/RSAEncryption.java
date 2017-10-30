@@ -1,4 +1,4 @@
-package app;
+package rsa;
 
 import java.security.Key;
 import java.security.KeyFactory;
@@ -21,7 +21,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  * RSA加密解密 
  * 此工具类能使用指定的字符串，每次生成相同的公钥和私钥且在linux和windows密钥也相同；相同的原文和密钥生成的密文相同 
  */  
-public class TestRSA {  
+public class RSAEncryption {  
     private static final String ALGORITHM_RSA = "RSA";  
     private static final String ALGORITHM_SHA1PRNG = "SHA1PRNG";  
     private static final int KEY_SIZE = 1024;  
@@ -162,14 +162,15 @@ public class TestRSA {
         String seed = "abc123";//种子  
 
         System.out.println("原文：\n" + source);  
-        Map<String, Object> keyMap = TestRSA.initKey(seed);//初始化密钥  
-        String publicKey = TestRSA.getPublicKey(keyMap);//公钥  
-        String privateKey = TestRSA.getPrivateKey(keyMap);//私钥  
+        Map<String, Object> keyMap = RSAEncryption.initKey(seed);//初始化密钥  
+//        System.out.println("keymap= "+keyMap);
+        String publicKey = RSAEncryption.getPublicKey(keyMap);//公钥  
+        String privateKey = RSAEncryption.getPrivateKey(keyMap);//私钥  
         System.out.println("公钥：\n" + publicKey);  
         System.out.println("私钥：\n" + privateKey);  
-        String encodedStr = TestRSA.encryptByPublicKey(source, publicKey);//加密  
+        String encodedStr = RSAEncryption.encryptByPublicKey(source, publicKey);//加密  
         System.out.println("密文：\n" + encodedStr);  
-        String decodedStr = TestRSA.decryptByPrivateKey(encodedStr, privateKey);//解密  
+        String decodedStr = RSAEncryption.decryptByPrivateKey(encodedStr, privateKey);//解密  
         System.out.println("解密后的结果：\n" + decodedStr);  
     }  
 }  

@@ -1,5 +1,6 @@
 package generator;
 
+import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,33 +15,56 @@ import object.Message;
 
 public class ClientGenerator {
 
-	private int clientNum = 100;
-	private int messageNum = 20;
-//	private int transcationTimeRange
+	private int clientNum;
+	private int messageNum;
+	private double fractionNum;
+	// private int transcationTimeRange
 
-	public List<Integer> clientIdList = new ArrayList<Integer>();
+	private List<Integer> clientIdList = new ArrayList<Integer>();
+	private List<String> seedList = new ArrayList<String>();
 	public List<Date> transactionTimeList = new ArrayList<Date>();
+	public List<Integer> depositLimitList=new ArrayList<Integer>();
+	public List<Integer> withdrawLimitList=new ArrayList<Integer>();
 
-	public ArrayList<Client> creatClient() {
+	public ArrayList<Client> creatClient(int clientNum,int messageNum, double fractionNum) {
+        
+		this.clientNum=clientNum;
+		this.messageNum=messageNum;
+		this.fractionNum=fractionNum;
+		
 		System.out.println("create client");
 		System.out.println("Total number of client = " + clientNum);
-
+		System.out.println("Total number of messageNum = " + messageNum);
+		
 		ArrayList<Client> clientList = new ArrayList<Client>();
 		MessageGenerator mg = new MessageGenerator();
-		ArrayList<Message> messageList = mg.setMessage();
-		System.out.println("size= " + messageList.size());
+		ArrayList<Message> messageList = mg.setMessage(messageNum);
+//		System.out.println("size= " + messageList.size());
 		Random random = new Random();
+
 		setclientId();
-		// define all the variable
+		setTranscationTime();
+		setSeed();
+		setWithdrawLimit();
+		setDepositLimit();
+		
+		// define the client
 		for (int i = 0; i < clientNum; i++) {
 			int number = random.nextInt(clientNum) + 1;
 			if (number > messageNum) {
-				Client client = new Client(clientIdList.get(i), false);
+				Client client = new Client(clientIdList.get(i), false, transactionTimeList.get(i),depositLimitList.get(i),withdrawLimitList.get(i));
 				client.setMessage(null);
+				client.setSeed(seedList.get(i));
 				clientList.add(client);
 			} else {
-				Client client = new Client(clientIdList.get(i), true);
-				client.setMessage(messageList.get(random.nextInt(messageNum)));
+				
+				Client client = new Client(clientIdList.get(i), true, transactionTimeList.get(i),depositLimitList.get(i),withdrawLimitList.get(i));
+				Message messageTemp=messageList.get(random.nextInt(messageNum));
+				if(messageTemp.getFractionNum()<fractionNum){
+					messageTemp.setMessageDetail(0);
+				}
+				client.setMessage(messageTemp);	
+				client.setSeed(seedList.get(i));
 				clientList.add(client);
 			}
 		}
@@ -63,42 +87,45 @@ public class ClientGenerator {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String currentTime = df.format(Calendar.getInstance().getTime());
 			long startTime = Timestamp.valueOf(currentTime).getTime();
-			long unixtime = startTime + 5 * 1000;
-
+			long unixtime = startTime + 5 * 10000 * i;
 			Date d = new Date(unixtime);
 			transactionTimeList.add(d);
 		}
 	}
 
-	public static void main(String[] args) {
-		ClientGenerator cg = new ClientGenerator();
-		
+	public String randomStr(int len) {
+		String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+		Random random = new Random();
 
-		// cg.setMessageList();
-		// cg.setMessageFractionList();
-		// cg.setMessage();
-		//
-		// System.out.println(cg.clientIdList.size());
+		StringBuilder sb = new StringBuilder(len);
+		for (int i = 0; i < len; i++)
+			sb.append(AB.charAt(random.nextInt(AB.length())));
+		return sb.toString().toLowerCase();
+	}
 
-		// System.out.println(cg.messageList.size());
-		//
+	public void setSeed() {
+
+		for (int i = 0; i < clientNum; i++) {
+			seedList.add(randomStr(6));
+		}
+	}
+	
+	public void setWithdrawLimit() {
 		
-		cg.setTranscationTime();
+		Random random = new Random();
+		for (int i = 0; i < clientNum; i++) {			
+			int withdrawLimit=random.nextInt(3000);
+			withdrawLimitList.add(withdrawLimit);
+		}
+	}
+	
+	public void setDepositLimit() {
 		
-		
-//		ArrayList<Client> clientList = cg.creatClient();
-//		
-//		System.out.println("client list.size= " + clientList.size());
-//		for (int i = 0; i < clientList.size(); i++) {
-//			System.out.println("id= " + clientList.get(i).getClientId());
-//			if (clientList.get(i).getMessage() != null) {
-//				System.out.println("id= " + clientList.get(i).getMessage().getFractionNum());
-//				System.out.println("id= " + clientList.get(i).getMessage().getMessageDetail());
-//			} else {
-//				System.out.println("id= " + clientList.get(i).getMessage());
-//			}
-//			System.out.println();
-//		}
+		Random random = new Random();
+		for (int i = 0; i < clientNum; i++) {
+			int depositLimit=random.nextInt(2000);
+			depositLimitList.add(depositLimit);
+		}
 	}
 
 }

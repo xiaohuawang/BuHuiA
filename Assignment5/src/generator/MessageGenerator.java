@@ -16,16 +16,14 @@ import object.Message;
 
 public class MessageGenerator {
 
-	private int messageNum = 20;
-	public List<Integer> messageDetailList = new ArrayList<Integer>();
-	public List<Double> messageFractionList = new ArrayList<Double>();
-
+	private int messageNum;
+	private List<Integer> messageDetailList = new ArrayList<Integer>();
+	private List<Double> messageFractionList = new ArrayList<Double>();
 
 	public ArrayList<Integer> generateRandomMessageDetail(int messageNum) {
 
 		// log("Generating 10 random integers in range 0..99.");
 
-		// note a single Random object is reused here
 		Random randomGenerator = new Random();
 		ArrayList<Integer> messageDetailList = new ArrayList<Integer>();
 
@@ -51,28 +49,10 @@ public class MessageGenerator {
 		return fractionList;
 	}
 
-	// public void setMessageList(int messageNum) {
-	// MessageGenerator mg = new MessageGenerator();
-	//
-	// for (int i = 0; i < messageNum; i++) {
-	// messageDetailList = mg.generateRandomMessageDetail(messageNum);
-	// // System.out.println("message size= " + messageDetailList.size());
-	// Random random = new Random();
-	// int index = random.nextInt(messageDetailList.size());
-	// int message = messageDetailList.get(index);
-	// messageDetailList.add(message);
-	// // System.out.println(messageList.get(index));
-	// }
-	// }
-	//
-	// public void setMessageFractionList() {
-	// MessageGenerator mg = new MessageGenerator();
-	// for (int i = 0; i < messageNum; i++) {
-	// messageFractionList = mg.generateRandomfractionNum(messageNum);
-	// }
-	// }
+	public ArrayList<Message> setMessage(int messageNum) {
 
-	public ArrayList<Message> setMessage() {
+		System.out.println("messageNum= " + messageNum);
+		this.messageNum = messageNum;
 
 		ArrayList<Integer> messageDetailList = generateRandomMessageDetail(messageNum);
 		ArrayList<Double> messageFractionList = generateRandomfractionNum(messageNum);
@@ -86,23 +66,16 @@ public class MessageGenerator {
 		}
 		return messageList;
 	}
-	// message =1296
-	// message =25142
-	// message =25091
-	// message =13304
-	// message =28623
-	// message =21541
-	// message =24287
 
-//	public static void main(String[] args) {
-//		MessageGenerator mg = new MessageGenerator();
-//		ArrayList<Message> res = mg.setMessage();
-//		System.out.println(res.size());
-//		
-//		for(int i=0;i<mg.messageNum;i++){
-//			System.out.println(res.get(i).getFractionNum());
-//			System.out.println(res.get(i).getMessageDetail());
-//		}
-//	}
+	// public static void main(String[] args) {
+	// MessageGenerator mg = new MessageGenerator();
+	// ArrayList<Message> res = mg.setMessage();
+	// System.out.println(res.size());
+	//
+	// for(int i=0;i<mg.messageNum;i++){
+	// System.out.println(res.get(i).getFractionNum());
+	// System.out.println(res.get(i).getMessageDetail());
+	// }
+	// }
 
 }
